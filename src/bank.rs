@@ -1,17 +1,19 @@
 use std::fmt;
 use std::fmt::Formatter;
+use chrono::{DateTime, Utc};
 
-/// Stores bank account information such as balance and name!
+/// Stores bank account information such as balance, name, and payment history!
 pub struct Bank {
     balance: f32,
     name: String,
+    pub payments: Vec<(i64, String, f32)>,
 }
 
 impl Bank {
 
     /// Constructor... OOP caveman brain ooga booga
     pub fn new(name: String, balance: f32) -> Bank {
-        Bank { name, balance }
+        Bank { name, balance, payments: vec![] }
     }
 
     pub fn get_balance(&self) -> f32 {
@@ -27,6 +29,9 @@ impl Bank {
     pub fn withdraw(&mut self, amount: f32) -> Result<f32, BankWithdrawAmountError> {
         if self.balance >= amount {
             self.balance -= amount;
+
+            // Add to payment history
+            self.payments.push((Utc::now().timestamp(), self.name.clone(), amount));
             Ok(self.balance)
         } else {
             Err(BankWithdrawAmountError)
@@ -41,6 +46,9 @@ impl Bank {
         }
         self.balance -= amount;
         recipient.send(amount);
+
+        // Add to payment history
+        self.payments.push((Utc::now().timestamp(), recipient.name.clone(), amount));
 
         Ok(self.balance)
     }

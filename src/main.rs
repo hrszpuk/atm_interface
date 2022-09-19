@@ -1,6 +1,7 @@
 mod bank;
 
 use std::io::Write;
+use std::ops::Deref;
 use crate::bank::BankWithdrawAmountError;
 
 fn main() {
@@ -63,7 +64,15 @@ fn main() {
             },
 
             // View payment history
-            "payments" => continue,
+            "payments" => {
+                for (date, name, amount) in &account.payments {
+                    if *name == *account.get_name() {
+                        println!("[{}] Withdrew ${}.", date, amount);
+                    } else {
+                        println!("[{}] Transferred ${} to {}.", date, amount, name);
+                    }
+                }
+            },
 
             // Withdraw money from the user's account (takes away from balance)
             "withdraw" => {
@@ -74,6 +83,7 @@ fn main() {
                     &mut buffer,
                 );
                 let amount = buffer
+                    .trim()
                     .parse::<f32>()
                     .expect("Value entered could not be parsed as f32!");
 
