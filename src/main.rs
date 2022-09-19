@@ -1,6 +1,7 @@
 mod bank;
 
 use std::io::Write;
+use crate::bank::BankWithdrawAmountError;
 
 fn main() {
     println!("ATM interface");
@@ -22,9 +23,12 @@ fn main() {
                     .trim()
                     .parse::<f32>()
                     .expect("Value entered could not be parsed as f32!");
-                let new_balance = account.withdraw(amount)
-                    .expect("Tried to withdraw too much money!");
-                println!("You withdraw ${}!\nRemaining balance: ${}", amount, new_balance);
+                match account.withdraw(amount) {
+                    Ok(bal) => {
+                        println!("You withdrew ${}!\nRemaining balance: ${}", amount, bal);
+                    },
+                    Err(_) => println!("You cannot withdraw ${} as it exceeds your balance!", amount),
+                };
             },
             _ => continue,
         }
