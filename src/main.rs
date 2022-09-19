@@ -41,7 +41,19 @@ fn main() {
                     format!("Corresponding number (1..{}): ", other_accounts.len()).as_str(),
                     &mut buffer,
                 );
-                let mut recipient = &mut other_accounts[buffer.trim().parse::<usize>().unwrap()-1];
+                let recipient_number = match buffer.trim().parse::<usize>() {
+                    Ok(number) => if number-1 < other_accounts.len() {
+                        number
+                    } else {
+                        println!("Invalid! {} is not between {} and {}.", buffer.trim(), 1, other_accounts.len());
+                        continue;
+                    },
+                    Err(_) => {
+                        println!("\"{}\" is not a valid recipient number!", buffer.trim());
+                        continue;
+                    }
+                };
+                let mut recipient = &mut other_accounts[recipient_number];
 
                 // Find the amount of money the user wants to send...
                 output_and_read_to_buffer(
@@ -49,7 +61,13 @@ fn main() {
                         .as_str(),
                     &mut buffer,
                 );
-                let mut amount = buffer.trim().parse().unwrap();
+                let mut amount = match buffer.trim().parse() {
+                    Ok(value) => value,
+                    Err(_) => {
+                        println!("\"{}\" is not a valid transfer amount!", buffer.trim());
+                        continue;
+                    }
+                };
 
                 // Transfer money to the recipient!
                 match account.transfer(recipient, amount) {
@@ -82,10 +100,13 @@ fn main() {
                     "Please enter the amount you wish to withdraw: $",
                     &mut buffer,
                 );
-                let amount = buffer
-                    .trim()
-                    .parse::<f32>()
-                    .expect("Value entered could not be parsed as f32!");
+                let amount = match buffer.trim().parse::<f32>() {
+                    Ok(value) => value,
+                    Err(_) => {
+                        println!("\"{}\" is not a valid withdraw amount!", buffer.trim());
+                        continue;
+                    }
+                };
 
                 // Withdrawing the amount from the user's balance
                 match account.withdraw(amount) {
