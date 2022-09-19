@@ -27,6 +27,20 @@ impl Bank {
             Err(BankWithdrawAmountError)
         }
     }
+
+    pub fn transfer(&mut self, recipient: &mut Bank, amount: f32) -> Result<f32, BankTransferError> {
+        if self.balance < amount {
+            return Err(BankTransferError)
+        }
+        self.balance -= amount;
+        recipient.send(amount);
+
+        Ok(self.balance)
+    }
+
+    fn send(&mut self, amount: f32) {
+        self.balance += amount;
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -35,6 +49,15 @@ pub struct BankWithdrawAmountError;
 impl fmt::Display for BankWithdrawAmountError {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
        write!(f, "withdraw amount exceeded bank account balance")
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct BankTransferError;
+
+impl fmt::Display for BankTransferError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "bank transfer was unsuccessful")
     }
 }
 
