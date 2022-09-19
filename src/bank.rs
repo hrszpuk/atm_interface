@@ -1,12 +1,15 @@
 use std::fmt;
 use std::fmt::Formatter;
 
+/// Stores bank account information such as balance and name!
 pub struct Bank {
     balance: f32,
     name: String,
 }
 
 impl Bank {
+
+    /// Constructor... OOP caveman brain ooga booga
     pub fn new(name: String, balance: f32) -> Bank {
         Bank { name, balance }
     }
@@ -19,6 +22,8 @@ impl Bank {
         &self.name
     }
 
+    /// Withdraws a given amount from the balance and returns the result.
+    /// We return an error if the amount exceeds the balance of the account.
     pub fn withdraw(&mut self, amount: f32) -> Result<f32, BankWithdrawAmountError> {
         if self.balance >= amount {
             self.balance -= amount;
@@ -28,6 +33,8 @@ impl Bank {
         }
     }
 
+    /// Transfers a given amount from (&mut self) to the given recipient.
+    /// Will return a BankTransferError if any issues happen in the process.
     pub fn transfer(&mut self, recipient: &mut Bank, amount: f32) -> Result<f32, BankTransferError> {
         if self.balance < amount {
             return Err(BankTransferError)
@@ -38,11 +45,13 @@ impl Bank {
         Ok(self.balance)
     }
 
+    /// Private function used to give bank accounts money (used in transfer).
     fn send(&mut self, amount: f32) {
         self.balance += amount;
     }
 }
 
+/// This error occurs when the amount exceeds the balance during a withdraw request
 #[derive(Debug, Clone)]
 pub struct BankWithdrawAmountError;
 
@@ -52,6 +61,7 @@ impl fmt::Display for BankWithdrawAmountError {
     }
 }
 
+/// This error occurs when the process of transferring money from one account to another fails.
 #[derive(Debug, Clone)]
 pub struct BankTransferError;
 
