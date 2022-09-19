@@ -17,3 +17,8 @@ Finally, change into the target directory and run the program using `./atm_inter
 cd target/release && ./atm_interface
 ```
 From here, you can use the "help" command to see a list of command you can use.
+
+### Contributing
+Currently, the project is not accepting contributions of any kind.
+This repository is purely for storage and remote access.
+This project is educational, and not designed to be useful to practical in anyway.
