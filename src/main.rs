@@ -96,6 +96,8 @@ fn main() {
                 };
             },
 
+            "help" => println!("Available commands are: help, balance, withdraw, transfer, and payments!"),
+
             // If we ever get an unexpected input we just ignore it and continue
             _ => continue,
         }
