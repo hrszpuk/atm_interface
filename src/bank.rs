@@ -1,6 +1,6 @@
 use std::fmt;
 use std::fmt::Formatter;
-use chrono::{DateTime, Utc};
+use chrono::Utc;
 
 /// Stores bank account information such as balance, name, and payment history!
 pub struct Bank {

@@ -1,8 +1,6 @@
 mod bank;
 
 use std::io::Write;
-use std::ops::Deref;
-use crate::bank::BankWithdrawAmountError;
 
 fn main() {
     println!("ATM interface");
@@ -53,7 +51,7 @@ fn main() {
                         continue;
                     }
                 };
-                let mut recipient = &mut other_accounts[recipient_number];
+                let recipient = &mut other_accounts[recipient_number];
 
                 // Find the amount of money the user wants to send...
                 output_and_read_to_buffer(
@@ -61,7 +59,7 @@ fn main() {
                         .as_str(),
                     &mut buffer,
                 );
-                let mut amount = match buffer.trim().parse() {
+                let amount = match buffer.trim().parse() {
                     Ok(value) => value,
                     Err(_) => {
                         println!("\"{}\" is not a valid transfer amount!", buffer.trim());
