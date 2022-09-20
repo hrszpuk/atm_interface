@@ -152,7 +152,7 @@ fn withdraw(mut buffer: &mut String, account: &mut bank::Bank) {
 fn register() -> bank::Bank {
     let mut name = String::new();
     let mut balance_buffer = String::new();
-    let mut balance: f32;
+    let balance: f32;
 
     println!("Register a name and starting balance to continue...");
 
@@ -175,7 +175,7 @@ fn register() -> bank::Bank {
         }
     };
 
-    bank::Bank::new(name, balance)
+    bank::Bank::new(name.trim().to_string(), balance)
 }
 
 /// We do this a lot so I made a function for it.
