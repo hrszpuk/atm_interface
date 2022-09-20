@@ -126,8 +126,11 @@ fn main() {
                 println!("\tpayments: view payment history");
             },
 
-            // If we ever get an unexpected input we just ignore it and continue
-            _ => continue,
+            // If we ever get an unexpected input we report the issue to the user
+            _ => println!(
+                "error: \"{}\" is not an available command. \nUse \"help\" to view available commands.",
+                buffer.trim()
+            ),
         }
         buffer.clear()
     }
