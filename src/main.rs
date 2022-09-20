@@ -117,7 +117,14 @@ fn main() {
                 };
             },
 
-            "help" => println!("Available commands are: help, balance, withdraw, transfer, and payments!"),
+            "help" => {
+                println!("Available commands:");
+                println!("\thelp: show this message");
+                println!("\tbalance: shows your current balance");
+                println!("\ttransfer: transfer funds to another individual");
+                println!("\twithdraw: withdraw funds from your account");
+                println!("\tpayments: view payment history");
+            },
 
             // If we ever get an unexpected input we just ignore it and continue
             _ => continue,
