@@ -32,9 +32,11 @@ fn main() {
             "payments" => {
                 for (date, name, amount) in &account.payments {
                     if *name == *account.get_name() {
-                        println!("[{}] Withdrew ${}.", date, amount);
+                        println!("Timestamp: {}", date);
+                        println!("           └ Withdrew ${}", amount);
                     } else {
-                        println!("[{}] Transferred ${} to {}.", date, amount, name);
+                        println!("Timestamp: {}", date);
+                        println!("           └ Transferred ${} to \"{}\"", amount, name);
                     }
                 }
             },
