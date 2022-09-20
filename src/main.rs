@@ -26,58 +26,7 @@ fn main() {
             "balance" => println!("Your current balance is: ${}.", account.get_balance()),
 
             // For transferring money from the user's account to another
-            "transfer" => {
-
-                // List all the recipients the user can send to...
-                println!("Please choose the recipient you wish to send money to.");
-                for (index, account) in other_accounts.iter().enumerate() {
-                    println!("[{}] {}", index+1, account.get_name());
-                }
-
-                // Get which recipient the user wants to send money to...
-                output_and_read_to_buffer(
-                    format!("Corresponding number (1..{}): ", other_accounts.len()).as_str(),
-                    &mut buffer,
-                );
-                let recipient_number = match buffer.trim().parse::<usize>() {
-                    Ok(number) => if number-1 < other_accounts.len() {
-                        number
-                    } else {
-                        println!("Invalid! {} is not between {} and {}.", buffer.trim(), 1, other_accounts.len());
-                        continue;
-                    },
-                    Err(_) => {
-                        println!("\"{}\" is not a valid recipient number!", buffer.trim());
-                        continue;
-                    }
-                };
-                let recipient = &mut other_accounts[recipient_number];
-
-                // Find the amount of money the user wants to send...
-                output_and_read_to_buffer(
-                    format!("How much would you like to transfer to {}? $", recipient.get_name())
-                        .as_str(),
-                    &mut buffer,
-                );
-                let amount = match buffer.trim().parse() {
-                    Ok(value) => value,
-                    Err(_) => {
-                        println!("\"{}\" is not a valid transfer amount!", buffer.trim());
-                        continue;
-                    }
-                };
-
-                // Transfer money to the recipient!
-                match account.transfer(recipient, amount) {
-                    Ok(bal) => println!(
-                        "Transferred ${} to {}!\nRemaining balance: ${}",
-                        amount,
-                        recipient.get_name(),
-                        bal,
-                    ),
-                    Err(_) => println!("An issue occurred with your transfer!"),
-                };
-            },
+            "transfer" => transfer(&mut buffer, &mut account, &mut other_accounts),
 
             // View payment history
             "payments" => {
@@ -91,34 +40,14 @@ fn main() {
             },
 
             // Withdraw money from the user's account (takes away from balance)
-            "withdraw" => {
+            "withdraw" => withdraw(&mut buffer, &mut account),
 
-                // Getting the amount the user wants to withdraw
-                output_and_read_to_buffer(
-                    "Please enter the amount you wish to withdraw: $",
-                    &mut buffer,
-                );
-                let amount = match buffer.trim().parse::<f32>() {
-                    Ok(value) => value,
-                    Err(_) => {
-                        println!("\"{}\" is not a valid withdraw amount!", buffer.trim());
-                        continue;
-                    }
-                };
-
-                // Withdrawing the amount from the user's balance
-                match account.withdraw(amount) {
-                    Ok(bal) => {
-                        println!("You withdrew ${}!\nRemaining balance: ${}", amount, bal);
-                    },
-                    Err(_) => println!("You cannot withdraw ${} as it exceeds your balance!", amount),
-                };
-            },
-
+            // Closes the application
             "exit"|"quit" => {
                 break;
             },
 
+            //  Show help message
             "help" => {
                 println!("Available commands:");
                 println!("\thelp: show this message");
@@ -136,7 +65,86 @@ fn main() {
         }
         buffer.clear()
     }
-    println!("Closed ATM interface.")
+    println!("Closed ATM interface.");
+}
+
+/// For transferring money from the user's bank account to another bank account
+fn transfer(mut buffer: &mut String, account: &mut bank::Bank, other_accounts: &mut Vec<bank::Bank>) {
+
+    // List all the recipients the user can send to...
+    println!("Please choose the recipient you wish to send money to.");
+    for (index, account) in other_accounts.iter().enumerate() {
+        println!("[{}] {}", index+1, account.get_name());
+    }
+
+    // Get which recipient the user wants to send money to...
+    output_and_read_to_buffer(
+        format!("Corresponding number (1..{}): ", other_accounts.len()).as_str(),
+        &mut buffer,
+    );
+    let recipient_number = match buffer.trim().parse::<usize>() {
+        Ok(number) => if number-1 < other_accounts.len() {
+            number
+        } else {
+            println!("Invalid! {} is not between {} and {}.", buffer.trim(), 1, other_accounts.len());
+            return;
+        },
+        Err(_) => {
+            println!("\"{}\" is not a valid recipient number!", buffer.trim());
+            return;
+        }
+    };
+    let recipient = &mut other_accounts[recipient_number];
+
+    // Find the amount of money the user wants to send...
+    output_and_read_to_buffer(
+        format!("How much would you like to transfer to {}? $", recipient.get_name())
+            .as_str(),
+        &mut buffer,
+    );
+    let amount = match buffer.trim().parse() {
+        Ok(value) => value,
+        Err(_) => {
+            println!("\"{}\" is not a valid transfer amount!", buffer.trim());
+            return;
+        }
+    };
+
+    // Transfer money to the recipient!
+    match account.transfer(recipient, amount) {
+        Ok(bal) => println!(
+            "Transferred ${} to {}!\nRemaining balance: ${}",
+            amount,
+            recipient.get_name(),
+            bal,
+        ),
+        Err(_) => println!("An issue occurred with your transfer!"),
+    };
+}
+
+/// For withdrawing money from the user's account
+fn withdraw(mut buffer: &mut String, account: &mut bank::Bank) {
+
+    // Getting the amount the user wants to withdraw
+    output_and_read_to_buffer(
+        "Please enter the amount you wish to withdraw: $",
+        &mut buffer,
+    );
+    let amount = match buffer.trim().parse::<f32>() {
+        Ok(value) => value,
+        Err(_) => {
+            println!("\"{}\" is not a valid withdraw amount!", buffer.trim());
+            return;
+        }
+    };
+
+    // Withdrawing the amount from the user's balance
+    match account.withdraw(amount) {
+        Ok(bal) => {
+            println!("You withdrew ${}!\nRemaining balance: ${}", amount, bal);
+        },
+        Err(_) => println!("You cannot withdraw ${} as it exceeds your balance!", amount),
+    };
 }
 
 /// We do this a lot so I made a function for it.
