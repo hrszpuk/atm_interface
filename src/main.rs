@@ -115,6 +115,10 @@ fn main() {
                 };
             },
 
+            "exit"|"quit" => {
+                break;
+            },
+
             "help" => {
                 println!("Available commands:");
                 println!("\thelp: show this message");
@@ -132,6 +136,7 @@ fn main() {
         }
         buffer.clear()
     }
+    println!("Closed ATM interface.")
 }
 
 /// We do this a lot so I made a function for it.
