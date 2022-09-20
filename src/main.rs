@@ -9,7 +9,7 @@ fn main() {
     let mut buffer = String::new();
 
     // Stores the user's account
-    let mut account = bank::Bank::new("Jeff Smith".to_owned(), 10924.89);
+    let mut account = register();
 
     // Other accounts (for transferring, and payment logs)
     let mut other_accounts = vec![
@@ -147,6 +147,35 @@ fn withdraw(mut buffer: &mut String, account: &mut bank::Bank) {
         },
         Err(_) => println!("You cannot withdraw ${} as it exceeds your balance!", amount),
     };
+}
+
+fn register() -> bank::Bank {
+    let mut name = String::new();
+    let mut balance_buffer = String::new();
+    let mut balance: f32;
+
+    println!("Register a name and starting balance to continue...");
+
+    output_and_read_to_buffer(
+        "Name: ",
+        &mut name,
+    );
+
+    output_and_read_to_buffer(
+        "Starting balance: ",
+        &mut balance_buffer,
+    );
+
+    balance = match balance_buffer.trim().parse::<f32>() {
+        Ok(bal) => bal,
+        Err(_) => {
+            println!("\"{}\" is not a valid starting balance!", balance_buffer.trim());
+            println!("Re-starting registry process.");
+            return register();
+        }
+    };
+
+    bank::Bank::new(name, balance)
 }
 
 /// We do this a lot so I made a function for it.

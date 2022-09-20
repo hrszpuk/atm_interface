@@ -20,10 +20,10 @@ From here, you can use the "help" command to see a list of command you can use.
 
 ### Todo
 Here is a todo list of future features/improvements I would like to add to the application.
-- [ ] Better help menu
-- [ ] Add login screen
+- [x] Better help menu
+- [x] Better "payments" screen
+- [x] Add login screen
 - [ ] Command line colors
-- [ ] Better "payments" screen
 
 ### Contributing
 Currently, the project is not accepting contributions of any kind.
