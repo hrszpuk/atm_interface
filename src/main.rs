@@ -49,6 +49,15 @@ fn main() {
                 break;
             },
 
+            // Shows name and balance
+            "info" => {
+                println!(
+                    "Account information\nName: {}\nBalance: ${}",
+                    account.get_name(),
+                    account.get_balance(),
+                )
+            }
+
             //  Show help message
             "help" => {
                 println!("Available commands:");
@@ -57,6 +66,8 @@ fn main() {
                 println!("\ttransfer: transfer funds to another individual");
                 println!("\twithdraw: withdraw funds from your account");
                 println!("\tpayments: view payment history");
+                println!("\tinfo: view account information");
+                println!("\texit: quits the program (quit also works)");
             },
 
             // If we ever get an unexpected input we report the issue to the user
