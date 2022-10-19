@@ -23,7 +23,7 @@ Here is a todo list of future features/improvements I would like to add to the a
 - [x] Better help menu
 - [x] Better "payments" screen
 - [x] Add login screen
-- [ ] Command line colors
+- [x] Command line colors
 
 ### Contributing
 Currently, the project is not accepting contributions of any kind.
